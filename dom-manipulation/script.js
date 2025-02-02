@@ -41,12 +41,16 @@ function addQuote() {
   const newQuoteCategory = document.getElementById('newQuoteCategory').value;
 
   if (newQuoteText && newQuoteCategory) {
-    quotes.push({ text: newQuoteText, category: newQuoteCategory });
+    const newQuote = { text: newQuoteText, category: newQuoteCategory };
+    quotes.push(newQuote);
     saveQuotes(); // Save to local storage
     document.getElementById('newQuoteText').value = '';
     document.getElementById('newQuoteCategory').value = '';
     populateCategories(); // Update the category dropdown
     showRandomQuote(); // Optionally display the newly added quote
+
+    // Send the new quote to the server
+    sendQuoteToServer(newQuote);
   } else {
     alert('Please fill in both the quote and category fields.');
   }
@@ -147,6 +151,30 @@ async function fetchQuotesFromServer() {
   } catch (error) {
     console.error('Error fetching quotes from server:', error);
     alert('Failed to sync quotes with the server.');
+  }
+}
+
+// Function to send a new quote to the server
+async function sendQuoteToServer(quote) {
+  try {
+    const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
+      method: 'POST', // Use POST method
+      headers: {
+        'Content-Type': 'application/json', // Set the content type to JSON
+      },
+      body: JSON.stringify(quote), // Convert the quote object to JSON
+    });
+
+    if (response.ok) {
+      const serverResponse = await response.json();
+      console.log('Quote sent to server:', serverResponse);
+      alert('Quote successfully sent to the server!');
+    } else {
+      throw new Error('Failed to send quote to server');
+    }
+  } catch (error) {
+    console.error('Error sending quote to server:', error);
+    alert('Failed to send quote to the server.');
   }
 }
 
