@@ -124,12 +124,56 @@ function importFromJsonFile(event) {
   fileReader.readAsText(event.target.files[0]);
 }
 
+// Function to fetch quotes from the server
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+    const serverQuotes = await response.json();
+
+    // Simulate server quotes (since JSONPlaceholder doesn't return our format)
+    const simulatedQuotes = serverQuotes.map(post => ({
+      text: post.title,
+      category: 'Server'
+    }));
+
+    // Merge server quotes with local quotes (server data takes precedence)
+    quotes = mergeQuotes(quotes, simulatedQuotes);
+    saveQuotes(); // Save merged quotes to local storage
+    populateCategories(); // Update the category dropdown
+    showRandomQuote(); // Display a random quote
+
+    // Notify the user
+    alert('Quotes synced with the server!');
+  } catch (error) {
+    console.error('Error fetching quotes from server:', error);
+    alert('Failed to sync quotes with the server.');
+  }
+}
+
+// Function to merge local and server quotes (server data takes precedence)
+function mergeQuotes(localQuotes, serverQuotes) {
+  const mergedQuotes = [...localQuotes];
+  serverQuotes.forEach(serverQuote => {
+    const existingQuote = mergedQuotes.find(q => q.text === serverQuote.text);
+    if (!existingQuote) {
+      mergedQuotes.push(serverQuote);
+    }
+  });
+  return mergedQuotes;
+}
+
 // Event listener for the "Show New Quote" button
 document.getElementById('newQuote').addEventListener('click', showRandomQuote);
 
 // Event listener for the "Export Quotes" button
 document.getElementById('exportQuotes').addEventListener('click', exportQuotes);
 
+// Event listener for the "Sync with Server" button
+document.getElementById('syncWithServer').addEventListener('click', fetchQuotesFromServer);
+
 // Load quotes and display a random quote when the page loads
 loadQuotes();
 showRandomQuote();
+
+// Periodically sync with the server every 60 seconds
+setInterval(fetchQuotesFromServer, 60000);
