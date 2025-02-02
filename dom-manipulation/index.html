@@ -20,6 +20,11 @@
       margin: 5px;
       cursor: pointer;
     }
+    input {
+      padding: 10px;
+      margin: 5px;
+      width: 200px;
+    }
   </style>
 </head>
 <body>
@@ -27,11 +32,7 @@
   <div id="quoteDisplay">Your quote will appear here...</div>
   <button id="newQuote">Show New Quote</button>
 
-  <div>
-    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-    <button onclick="addQuote()">Add Quote</button>
-  </div>
+  <!-- The form will be dynamically added here by JavaScript -->
 
   <script src="script.js"></script>
 </body>
