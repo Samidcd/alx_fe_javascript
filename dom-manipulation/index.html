@@ -32,7 +32,20 @@
   <div id="quoteDisplay">Your quote will appear here...</div>
   <button id="newQuote">Show New Quote</button>
 
-  <!-- The form will be dynamically added here by JavaScript -->
+  <div>
+    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+    <button onclick="addQuote()">Add Quote</button>
+  </div>
+
+  <div>
+    <button id="exportQuotes">Export Quotes as JSON</button>
+  </div>
+
+  <div>
+    <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+    <label for="importFile">Import Quotes from JSON</label>
+  </div>
 
   <script src="script.js"></script>
 </body>
